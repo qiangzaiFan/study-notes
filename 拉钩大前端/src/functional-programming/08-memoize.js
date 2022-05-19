@@ -14,5 +14,16 @@ function getArea(r) {
 //模拟memoize 方法的实现
 function memoize(f) {
   let cash = {};
-  return function () {};
+  return function () {
+    console.log("---arguments,", arguments, JSON.stringify(arguments));
+    let key = JSON.stringify(arguments);
+    cash[key] = cash[key] || f.apply(f, arguments);
+    // console.log("---cash,", cash);
+    return cash[key];
+  };
 }
+
+let getAreaWithMemory = memoize(getArea);
+console.log(getAreaWithMemory(4));
+console.log(getAreaWithMemory(4));
+console.log(getAreaWithMemory(4));
