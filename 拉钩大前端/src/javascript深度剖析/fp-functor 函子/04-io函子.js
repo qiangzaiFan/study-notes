@@ -1,42 +1,23 @@
 // IO 函子
+const fp = require('lodash/fp')
 
-class Left {
+class IO {
   static of(value) {
-    return new Left(value)
+    return new IO(function () {
+      return value
+    })
   }
-  constructor(value) {
-    this._value = value
-  }
-  map() {
-    return this
-  }
-}
 
-class Right {
-  static of(value) {
-    return new Right(value)
+  constructor(fn) {
+    this._value = fn
   }
-  constructor(value) {
-    this._value = value
-  }
+
   map(fn) {
-    return Right.of(fn(this._value))
+    return new IO(fp.flowRight(fn, this._value))
   }
 }
 
-function parseJSON(str) {
-  try {
-    return Right.of(JSON.parse(str))
-  } catch (e) {
-    return Left.of({ error: e.message })
-  }
-}
-
-// 演示错误案例
-// Left { _value: { error: 'Unexpected token n in JSON at position 1' } }
-// let r = parseJSON('{name:ds}')
-// console.log(r)
-
-// Right { _value: 'DS' }
-let r = parseJSON('{"name":"ds"}').map(x => x.name.toUpperCase())
+// 因为当前使用node 运行，有进程这个值
+let r = IO.of(process).map(p => p.execPath)
 console.log(r)
+console.log(r._value())
