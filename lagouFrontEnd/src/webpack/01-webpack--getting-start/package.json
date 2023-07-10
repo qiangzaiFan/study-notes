@@ -1,6 +1,10 @@
 {
-  "name": "01-webpack快速上手--getting-start",
+  "name": "01-webpack--getting-start",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "webpack": "^5.88.1",
+    "webpack-cli": "^5.1.4"
+  }
 }
