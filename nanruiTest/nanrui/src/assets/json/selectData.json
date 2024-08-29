@@ -23,29 +23,29 @@
           ]
         },
         {
-          "value": "002-1",
+          "value": "001-2",
           "label": "扬州市",
           "children": [
             {
-              "value": "002-1-1",
+              "value": "001-1-1",
               "label": "广陵区"
             },
             {
-              "value": "002-1-2",
+              "value": "001-1-2",
               "label": "高新区"
             }
           ]
         },
         {
-          "value": "002",
+          "value": "001-3",
           "label": "苏州市",
           "children": [
             {
-              "value": "002-1",
+              "value": "001-3-1",
               "label": "姑苏区"
             },
             {
-              "value": "002-2",
+              "value": "001-3-2",
               "label": "高新区"
             }
           ]
@@ -53,8 +53,38 @@
       ]
     },
     {
-      "value": "200",
-      "label": "上海市"
+      "value": "002",
+      "label": "上海市",
+      "children": [
+            {
+              "value": "002-1",
+              "label": "浦东",
+              "children": [
+                {
+                  "value": "002-1-1",
+                  "label": "川沙"
+                },
+                {
+                  "value": "002-1-2",
+                  "label": "崇明"
+                }
+              ]
+            },
+            {
+              "value": "002-2",
+              "label": "浦西",
+              "children": [
+                {
+                  "value": "002-2-1",
+                  "label": "川沙"
+                },
+                {
+                  "value": "002-2-2",
+                  "label": "崇明"
+                }
+              ]
+            }
+          ]
     }
   ]
 }
