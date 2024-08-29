@@ -13,99 +13,241 @@
         padding: 0;
         margin: 0;
       }
-      h4 {
-        margin-top: 16px;
+      .select-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        padding: 10px 40px;
+      }
+      .select-content fieldset {
+        border: none;
+        display: flex;
+      }
+      .select-content fieldset select {
+        width: 220px;
+        height: 30px;
+      }
+      .select-content .select-edit {
+        display: flex;
+      }
+      button {
+        margin-left: 10px;
       }
     </style>
   </head>
   <body>
     <div id="app">
-      <div>
-        <a-cascader :options="options" v-model="selectedValue" @change="onChange" placeholder="请选择省/市/区" />
-        <a-button @click="toggleModal" style="margin-top: 16px">修改数据</a-button>
-        <a-modal v-model="isModalVisible" title="修改数据" @ok="handleOk" @cancel="handleCancel">
-          <div>
-            <h4>新省</h4>
-            <a-input v-model="newProvince" placeholder="输入省名" />
-            <h4>新市</h4>
-            <a-input v-model="newCity" placeholder="输入市名" />
-            <h4>新区</h4>
-            <a-input v-model="newDistrict" placeholder="输入区名" />
+      <div class="select-content">
+        <fieldset>
+          <legend>省级：</legend>
+          <select ref="province">
+            <option value="">--请选择--</option>
+            <option
+              v-for="item in province"
+              :key="item.code"
+              :value="item.code"
+            >
+              {{item.name}}
+            </option>
+          </select>
+          <button @click="handleOpr(1,1)">添加</button>
+          <button @click="handleOpr(1,2)">编辑</button>
+          <div class="select-edit" v-if="isShow1">
+            <fieldset>
+              <legend>名称：</legend>
+              <input ref="name1" type="text" :value="form0.name" />
+            </fieldset>
+            <fieldset>
+              <legend>编码：</legend>
+              <input ref="code1" type="text" :value="form0.code" />
+            </fieldset>
+            <button @click="submit(1)">保存</button>
           </div>
-        </a-modal>
+        </fieldset>
+        <fieldset>
+          <legend>市级：</legend>
+          <select ref="city">
+            <option value="">--请选择--</option>
+            <option v-for="item in city" :key="item.code" :value="item.code">
+              {{item.name}}
+            </option>
+          </select>
+          <button @click="handleOpr(2,1)">添加</button>
+          <button @click="handleOpr(2,2)">编辑</button>
+          <div class="select-edit" v-if="isShow2">
+            <fieldset>
+              <legend>名称：</legend>
+              <input ref="name2" type="text" :value="form1.name" />
+            </fieldset>
+            <fieldset>
+              <legend>编码：</legend>
+              <input ref="code2" type="text" :value="form1.code" />
+            </fieldset>
+            <button @click="submit(2)">保存</button>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>县级：</legend>
+          <select>
+            <option value="">--请选择--</option>
+            <option v-for="item in country" :key="item.code" :value="item.code">
+              {{item.name}}
+            </option>
+          </select>
+          <button @click="handleOpr(3,2)">编辑</button>
+          <div class="select-edit" v-if="isShow3">
+            <fieldset>
+              <legend>名称：</legend>
+              <input ref="name3" type="text" :value="form2.name" />
+            </fieldset>
+            <fieldset>
+              <legend>编码：</legend>
+              <input ref="code3" type="text" :value="form2.code" />
+            </fieldset>
+            <button @click="submit(3)">保存</button>
+          </div>
+        </fieldset>
       </div>
     </div>
 
     <script>
+      import { data as dataInfo } from './selectData.js'
       new Vue({
         el: '#app',
         data() {
           return {
-            options: [],
-            selectedValue: [],
-            isModalVisible: false,
-            newProvince: '',
-            newCity: '',
-            newDistrict: ''
+            province: [],
+            city: [],
+            country: [],
+            selectData: [],
+            selectList: [],
+            isEdit: false,
+            form0: {
+              name: '',
+              code: ''
+            },
+            form1: {
+              name: '',
+              code: ''
+            },
+            form2: {
+              name: '',
+              code: ''
+            },
+            parent0: false,
+            parent1: false,
+            parent2: false,
+            isShow1: false,
+            isShow2: false,
+            isShow3: false
           }
         },
-        created() {
-          fetch('http://localhost:3000/data')
-            .then(res => {
-              return res.json()
-            })
-            .then(json => {
-              console.log('---json,', json)
-              this.citiesData = json
-              this.initializeOptions()
-            })
+        mounted() {
+          // fetch('./selectData.json')
+          //   .then(res => {
+          //     return res.json()
+          //   })
+          //   .then(json => {
+          //     console.log('---json,', json)
+          //     this.province = json
+          //   })
+          this.province = this.$refs.province.addEventListener(
+            'change',
+            evt => {
+              if (evt.target) {
+                if (evt.target.value) {
+                  this.province.forEach(item => {
+                    if (item.code === evt.target.value) {
+                      this.city = item.children
+                      this.country = []
+                    }
+                  })
+                } else {
+                  this.city = []
+                  this.country = []
+                }
+              }
+            }
+          )
+          this.$refs.city.addEventListener('change', evt => {
+            if (evt.target) {
+              if (evt.target.value) {
+                this.city.forEach(item => {
+                  if (item.code === evt.target.value) {
+                    this.country = item.children
+                  }
+                })
+              } else {
+                this.country = []
+              }
+            }
+          })
         },
         methods: {
-          initializeOptions() {
-            this.options = this.citiesData.map(province => ({
-              value: province.code,
-              label: province.name,
-              children: province.cities.map(city => ({
-                value: city.code,
-                label: city.name,
-                children: city.districts.map(district => ({
-                  value: district.code,
-                  label: district.name
-                }))
-              }))
-            }))
-          },
-          onChange(value) {
-            console.log(value)
-          },
-          toggleModal() {
-            this.isModalVisible = !this.isModalVisible
-          },
-          handleOk() {
-            if (this.newProvince) {
-              const province = this.citiesData.find(p => p.name === this.newProvince)
-              if (!province) {
-                // 如果省不存在，创建新的省
-                const newProvinceData = {
-                  name: this.newProvince,
-                  code: `00${this.citiesData.length + 1}`,
-                  cities: []
+          handleOpr(type, subType) {
+            this[`parent${type - 1}`] = null
+            let temp = ['province', 'city', 'country']
+            if (this.$refs[`${temp[type - 1]}`].value) {
+              this.isShow1 = true
+              if (subType === 2) {
+                this[`form${type - 1}`] = {
+                  name: this[`${temp[type - 1]}`].filter(
+                    item => item.code === this.$refs[`${temp[type - 1]}`].value
+                  )[0].name,
+                  code: this.$refs[`${temp[type - 1]}`].value
                 }
-                this.citiesData.push(newProvinceData)
+                this.$refs[`code${type}`].disabled = true //setAttribute('disabled', true)
+              } else {
+                this[`parent${type - 1}`] = this[`${temp[type - 1]}`].filter(
+                  item => item.code === this.$refs[`${temp[type - 1]}`].value
+                )[0]
               }
-              this.clearInputs()
-              this.initializeOptions()
             }
-            this.toggleModal()
           },
-          handleCancel() {
-            this.clearInputs()
-            this.toggleModal()
-          },
-          clearInputs() {
-            this.newProvince = ''
-            this.newCity = ''
-            this.newDistrict = ''
+          submit(type) {
+            let temp = ['province', 'city', 'country']
+            if (this[`parent${type - 1}`] && this[`parent${type - 1}`].code) {
+              this.province.forEach(item => {
+                if (item.code === this[`parent${type - 1}`].code) {
+                  item.children.push({
+                    name: this.$refs[`name${type}`].value,
+                    code: this.$refs[`code${type}`].value
+                  })
+                } else {
+                  item.children &&
+                    item.children.forEach(_item => {
+                      if (_item.code === this[`parent${type - 1}`].code) {
+                        _item.children.push({
+                          name: this.$refs[`name${type}`].value,
+                          code: this.$refs[`code${type}`].value
+                        })
+                      }
+                    })
+                }
+              })
+            } else {
+              this.province.forEach(item => {
+                if (item.code === this[`form${type - 1}`].code) {
+                  item.name = this.$refs[`name${type}`].value
+                } else {
+                  item.children &&
+                    item.children.forEach(_item => {
+                      if (_item.code === this[`form${type - 1}`].code) {
+                        _item.name = this.$refs[`name${type}`].value
+                      } else {
+                        _item.children &&
+                          _item.children.forEach(__item => {
+                            if (__item.code === this[`form${type - 1}`].code) {
+                              __item.name = this.$refs[`name${type}`].value
+                            } else {
+                            }
+                          })
+                      }
+                    })
+                }
+              })
+            }
+            this[`isShow${type}`] = false
           }
         }
       })
