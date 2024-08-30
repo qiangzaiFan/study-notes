@@ -10,5 +10,3 @@
 （4）实现提供修改数据功能，可修改并添加每级下拉框中的数据 (30分)
 
 json-server selectData.json --watch --port 3000
-
-Cascader 组件 ant-design-vue element-ui 都有，参数一致

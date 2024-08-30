@@ -1,17 +1,22 @@
 <template>
   <div id="app">
-    <CascaderSelector />
+    <OrgTree />
+    <!-- 省市区 -->
+    <!-- <CascaderSelector /> -->
+    <!-- 组织机构树 -->
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import CascaderSelector from '@/components/CascaderSelector.vue'
+// import CascaderSelector from '@/components/CascaderSelector.vue'
+import OrgTree from '@/components/OrgTree.vue'
 
 export default {
   name: 'HomeView',
   components: {
-    CascaderSelector
+    // CascaderSelector,
+    OrgTree
   }
 }
 </script>

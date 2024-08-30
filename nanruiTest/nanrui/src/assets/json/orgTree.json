@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "国家电网公司",
+    "children": [
+      {
+        "name": "南瑞集团",
+        "children": []
+      },
+      {
+        "name": "国网信通",
+        "children": []
+      }
+    ]
+  }
+}
