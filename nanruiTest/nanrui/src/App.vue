@@ -1,22 +1,26 @@
 <template>
   <div id="app">
-    <OrgTree />
     <!-- 省市区 -->
     <!-- <CascaderSelector /> -->
     <!-- 组织机构树 -->
+    <!-- <OrgTree /> -->
+    <!-- 购物车 -->
+    <ShoppingCart />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
 // import CascaderSelector from '@/components/CascaderSelector.vue'
-import OrgTree from '@/components/OrgTree.vue'
+// import OrgTree from '@/components/OrgTree.vue'
+import ShoppingCart from '@/components/ShoppingCart.vue'
 
 export default {
   name: 'HomeView',
   components: {
     // CascaderSelector,
-    OrgTree
+    // OrgTree,
+    ShoppingCart
   }
 }
 </script>
