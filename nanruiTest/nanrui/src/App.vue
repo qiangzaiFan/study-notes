@@ -7,7 +7,9 @@
     <!-- 购物车 -->
     <!-- <ShoppingCart /> -->
     <!-- 固定列差旅表格 -->
-    <FixedTable />
+    <!-- <FixedTable /> -->
+    <!-- 固定列差旅表格 -->
+    <Inspection />
   </div>
 </template>
 
@@ -16,7 +18,8 @@
 // import CascaderSelector from '@/components/CascaderSelector.vue'
 // import OrgTree from '@/components/OrgTree.vue'
 // import ShoppingCart from '@/components/ShoppingCart.vue'
-import FixedTable from '@/components/FixedTable.vue'
+// import FixedTable from '@/components/FixedTable.vue'
+import Inspection from '@/components/Inspection.vue'
 
 export default {
   name: 'HomeView',
@@ -24,7 +27,8 @@ export default {
     // CascaderSelector,
     // OrgTree,
     // ShoppingCart,
-    FixedTable
+    // FixedTable,
+    Inspection
   }
 }
 </script>

@@ -1,0 +1,26 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "检修单1",
+      "reporter": "张三",
+      "department": "研发部",
+      "mobile": "13800138000",
+      "date": "2024-08-01",
+      "content": "检修内容1",
+      "attachments": ["image1.jpg", "image2.jpg"]
+    },
+    {
+      "id": 2,
+      "name": "检修单2",
+      "reporter": "李四",
+      "department": "测试部",
+      "mobile": "13900139000",
+      "date": "2024-08-02",
+      "content": "检修内容2",
+      "attachments": []
+    }
+  ]
+  
+}
+
