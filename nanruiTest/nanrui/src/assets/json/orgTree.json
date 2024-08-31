@@ -1,14 +1,17 @@
 {
   "data": {
-    "name": "国家电网公司",
+    "title": "国家电网公司",
+    "key": "1",
     "children": [
       {
-        "name": "南瑞集团",
-        "children": []
+        "title": "南瑞集团",
+        "key": "1-0",
+        "children":[]
       },
       {
-        "name": "国网信通",
-        "children": []
+        "title": "国网信通",
+        "key": "1-1",
+        "children":[]
       }
     ]
   }

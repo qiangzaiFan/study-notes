@@ -1,54 +1,44 @@
 <template>
   <div>
     <a-tree
+      :expandedKeys.sync="expandedKeys"
       :treeData="treeData"
       :selectedKeys="selectedKeys"
       @select="onSelect"
-      @contextmenu="onContextMenu"
-      @expand="onExpand"
+      @rightClick="onRightClick"
       style="width: 300px"
-      :expandedKeys="expandedKeys"
     />
-    <a-modal
-      title="新增/修改机构"
-      :visible="modalVisible"
-      @ok="handleOk"
-      @cancel="handleCancel"
-    >
-      <a-form :form="form" :model="formData" ref="formRef">
-        <a-form-item
-          label="机构名称"
-          :rules="[
-            { required: true, message: '请输入机构名称!' },
-            { validator: validateName }
-          ]"
-        >
-          <a-input v-model="formData.name" placeholder="请输入机构名称" />
+    <a-dropdown v-if="contextMenuVisible" :trigger="['contextmenu']" :visible="true">
+      <div :style="{ position: 'absolute', left: menuX + 'px', top: menuY + 'px' }" />
+      <template #overlay>
+        <a-menu>
+          <a-menu-item @click="showModal('add')">新增</a-menu-item>
+          <a-menu-item @click="showModal('edit')">修改</a-menu-item>
+          <a-menu-item @click="handleDelete">删除</a-menu-item>
+        </a-menu>
+      </template>
+    </a-dropdown>
+    <a-modal title="新增/修改机构" :visible="modalVisible" @ok="handleOk" @cancel="handleCancel">
+      <a-form :form="form" :model="formData">
+        <a-form-item label="机构名称">
+          <a-input
+            v-decorator="[
+              'orgName',
+              { rules: [{ required: true, message: '请输入机构名称' },{validator: validateName}] },
+            ]"
+            v-model="formData.name"
+            placeholder="请输入机构名称"
+          />
         </a-form-item>
         <a-form-item label="描述">
           <a-input v-model="formData.description" placeholder="请输入描述" />
         </a-form-item>
       </a-form>
     </a-modal>
-
-    <a-menu
-      v-if="contextMenuVisible"
-      :style="{
-        position: 'absolute',
-        left: `${contextMenuPosition.x}px`,
-        top: `${contextMenuPosition.y}px`
-      }"
-    >
-      <a-menu-item @click="showModal('add')">新增</a-menu-item>
-      <a-menu-item @click="showModal('edit')">修改</a-menu-item>
-      <a-menu-item @click="handleDelete">删除</a-menu-item>
-    </a-menu>
   </div>
 </template>
 
 <script>
-import { Tree, Modal, Form, Input, Menu } from 'ant-design-vue'
-
 export default {
   data() {
     return {
@@ -58,7 +48,8 @@ export default {
       modalVisible: false,
       formData: { name: '', description: '' },
       contextMenuVisible: false,
-      contextMenuPosition: { x: 0, y: 0 },
+      menuX: 0,
+      menuY: 0,
       editMode: false,
       currentNode: null,
       form: this.$form.createForm(this)
@@ -74,34 +65,25 @@ export default {
           return res.json()
         })
         .then(res => {
-          console.log('---res,', res)
-          this.treeData = this.formatTreeData(res)
-          this.selectedKeys = [this.treeData[0].key] // 默认南瑞集团为第一个节点
+          // console.log('---res,', res)
+          this.treeData = [res]
+          this.selectedKeys = ['1-0'] // 默认南瑞集团为第一个节点
+          this.expandedKeys = ['1']
         })
-      // this.treeData = this.formatTreeData(response.data)
-      // 默认选中南瑞集团
-      // this.selectedKeys = [this.treeData[0].key] // 假设南瑞集团为第一个节点
     },
-    formatTreeData(data) {
-      const formatData = data => ({
-        title: data.name,
-        key: data.name,
-        children: data.children.map(formatData)
-      })
 
-      return [formatData(data)]
+    onRightClick({ event, node }) {
+      console.log('---event,node,', event, node)
+
+      this.menuX = event.clientX
+      this.menuY = event.clientY
+      this.contextMenuVisible = true
+      this.currentNode = node
     },
     onSelect(selectedKeys) {
       this.selectedKeys = selectedKeys
     },
-    onExpand(expandedKeys) {
-      this.expandedKeys = expandedKeys
-    },
-    onContextMenu(event) {
-      event.preventDefault()
-      this.contextMenuVisible = true
-      this.contextMenuPosition = { x: event.clientX, y: event.clientY }
-    },
+
     showModal(mode) {
       this.modalVisible = true
       this.editMode = mode === 'edit'
@@ -120,42 +102,41 @@ export default {
     },
     handleOk() {
       // 表单验证
-      this.$refs.form.validate().then(() => {
-        if (this.editMode) {
-          // 修改操作
-          this.currentNode.title = this.formData.name
-          // 这里可以添加其他数据处理逻辑，例如请求后端更新
-        } else {
-          // 新增操作
-          const newNode = {
-            title: this.formData.name,
-            key: this.formData.name,
-            children: []
+      this.form.validateFields((err, values) => {
+        console.log('---err,', err)
+
+        if (!err) {
+          if (this.editMode) {
+            // 修改操作
+            this.currentNode.title = this.formData.name
+          } else {
+            // 新增操作
+            const newNode = {
+              title: this.formData.name,
+              key: Date.now().toString(),
+              children: []
+            }
+            const parentNode = this.findNode(this.treeData, this.selectedKeys[0])
+            parentNode.children.push(newNode)
           }
-          const parentNode = this.findNode(this.treeData, this.selectedKeys[0])
-          parentNode.children.push(newNode)
+          this.modalVisible = false
         }
-        this.modalVisible = false
       })
     },
     handleCancel() {
       this.modalVisible = false
     },
     handleDelete() {
-      const parentNode = this.findParentNode(
-        this.treeData,
-        this.selectedKeys[0]
-      )
+      const parentNode = this.findParentNode(this.treeData, this.selectedKeys[0])
       if (parentNode) {
-        parentNode.children = parentNode.children.filter(
-          node => node.key !== this.selectedKeys[0]
-        )
+        parentNode.children = parentNode.children.filter(node => node.key !== this.selectedKeys[0])
         this.selectedKeys = []
       }
+      this.contextMenuVisible = false
     },
     validateName(rule, value) {
       if (!value) return Promise.reject('名称为必填项！')
-      if (/[^\w\s]/.test(value)) return Promise.reject('名称不能包含特殊字符！')
+      if (/[$;%*!~&\/]/.test(value)) return Promise.reject('名称不能包含特殊字符！')
       return Promise.resolve()
     },
     findNode(nodes, key) {
