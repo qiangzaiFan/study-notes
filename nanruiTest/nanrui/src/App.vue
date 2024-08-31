@@ -5,7 +5,9 @@
     <!-- 组织机构树 -->
     <!-- <OrgTree /> -->
     <!-- 购物车 -->
-    <ShoppingCart />
+    <!-- <ShoppingCart /> -->
+    <!-- 固定列差旅表格 -->
+    <FixedTable />
   </div>
 </template>
 
@@ -13,14 +15,16 @@
 // @ is an alias to /src
 // import CascaderSelector from '@/components/CascaderSelector.vue'
 // import OrgTree from '@/components/OrgTree.vue'
-import ShoppingCart from '@/components/ShoppingCart.vue'
+// import ShoppingCart from '@/components/ShoppingCart.vue'
+import FixedTable from '@/components/FixedTable.vue'
 
 export default {
   name: 'HomeView',
   components: {
     // CascaderSelector,
     // OrgTree,
-    ShoppingCart
+    // ShoppingCart,
+    FixedTable
   }
 }
 </script>
