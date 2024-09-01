@@ -56,7 +56,7 @@
             v-decorator="[
               'mobile',
               {rules:[{
-                required:true,message:'手机号码'
+                required:true,message:'手机号码',parttern:/^1[3456789]\d{9}$/
               }]}
             ]"
             v-model="formData.mobile"
