@@ -1,7 +1,12 @@
 <template>
   <div>
     <a-button type="primary" @click="showAddProductModal">添加商品</a-button>
-    <a-modal title="添加商品" v-model="isAddProductModalVisible" @ok="addProduct" @cancel="handleCancel">
+    <a-modal
+      title="添加商品"
+      v-model="isAddProductModalVisible"
+      @ok="addProduct"
+      @cancel="handleCancel"
+    >
       <a-form :form="form">
         <a-form-item label="商品名称">
           <a-input v-model="newProduct.name" />
@@ -16,21 +21,37 @@
     </a-modal>
     <div v-if="cart.length > 0">
       <div class="cart-item" v-for="(item, index) in cart" :key="item.id">
-        <a-checkbox v-model="item.selected" :disabled="item.invalid" @change="updateTotalPrice" />
+        <a-checkbox
+          v-modal:checked="item.selected"
+          :disabled="item.invalid"
+          @change="updateTotalPrice"
+        />
         <img :src="item.image" alt="商品图片" class="item-image" />
         <div class="item-details">
           <p>{{ item.name }}</p>
           <p>价格: ¥{{ item.price }}</p>
-          <a-input-number v-if="!item.invalid" v-model="item.quantity" :min="1" @change="updateTotalPrice" />
+          <a-input-number
+            v-if="!item.invalid"
+            v-model="item.quantity"
+            :min="1"
+            @change="updateTotalPrice"
+          />
           <span v-else>失效商品</span>
 
           <a-button type="danger" @click="removeItem(index)">删除</a-button>
         </div>
       </div>
       <div class="cart-footer">
-        <a-checkbox v-model="allSelected" @change="selectAll">全选</a-checkbox>
+        <a-checkbox v-modal:checked="allSelected" @change="selectAll"
+          >全选</a-checkbox
+        >
         <p>总价: ¥{{ totalPrice }}</p>
-        <a-button type="primary" @click="checkout" :disabled="!selectedItems.length">结算</a-button>
+        <a-button
+          type="primary"
+          @click="checkout"
+          :disabled="!selectedItems.length"
+          >结算</a-button
+        >
       </div>
     </div>
   </div>
