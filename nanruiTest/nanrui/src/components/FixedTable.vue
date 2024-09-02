@@ -1,32 +1,53 @@
 <template>
   <div>
-    <a-table :custom-row="customRow" :columns="columns" :data-source="dataSource" bordered size="middle" :scroll="{ x: 'max-content'}">
+    <a-table
+      :custom-row="customRow"
+      :columns="columns"
+      :data-source="dataSource"
+      bordered
+      size="middle"
+      :scroll="{ x: 'max-content' }"
+    >
       <template slot="operation" slot-scope="text, record, index">
         <div class="editable-row-operations">
           <span>
-            <a @click="() => show(record,index)">查看</a>
-            <a @click="() => add(record,index)">新增</a>
-            <a @click="() => handleDelete(record,index)">删除</a>
-            <a @click="() => edit(record,index)">修改</a>
+            <a @click="() => show(record, index)">查看</a>
+            <a @click="() => add(record, index)">新增</a>
+            <a @click="() => handleDelete(record, index)">删除</a>
+            <a @click="() => edit(record, index)">修改</a>
           </span>
         </div>
       </template>
     </a-table>
-    <a-dropdown v-if="contextMenuVisible" :trigger="['contextmenu']" :visible="true">
-      <div :style="{ position: 'absolute', left: menuX + 'px', top: menuY + 'px' }" />
-      <template #overlay>
+    <a-dropdown v-if="contextMenuVisible" :visible="true">
+      <div
+        :style="{ position: 'absolute', left: menuX + 'px', top: menuY + 'px' }"
+      />
+      <template slot="overlay">
         <a-menu>
-          <a-menu-item @click="handleDelete(currentRecord,currentRecordIndex)">删除</a-menu-item>
+          <a-menu-item @click="handleDelete(currentRecord, currentRecordIndex)"
+            >删除</a-menu-item
+          >
         </a-menu>
       </template>
     </a-dropdown>
-    <a-modal title="新增/修改机构" :visible="modalVisible" @ok="handleOk" @cancel="handleCancel">
+    <a-modal
+      title="新增/修改机构"
+      :visible="modalVisible"
+      @ok="handleOk"
+      @cancel="handleCancel"
+    >
       <a-form :form="form" :model="formData">
         <a-form-item label="机构名称">
           <a-input
             v-decorator="[
               'orgName',
-              { rules: [{ required: true, message: '请输入机构名称' },{validator: validateName}] },
+              {
+                rules: [
+                  { required: true, message: '请输入机构名称' },
+                  { validator: validateName }
+                ]
+              }
             ]"
             v-model="formData.name"
             placeholder="请输入机构名称"
@@ -242,7 +263,8 @@ export default {
 
     validateName(rule, value) {
       if (!value) return Promise.reject('名称为必填项！')
-      if (/[$;%*!~&\/]/.test(value)) return Promise.reject('名称不能包含特殊字符！')
+      if (/[$;%*!~&\/]/.test(value))
+        return Promise.reject('名称不能包含特殊字符！')
       return Promise.resolve()
     }
   }

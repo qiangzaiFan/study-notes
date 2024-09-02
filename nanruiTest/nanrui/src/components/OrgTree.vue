@@ -8,9 +8,15 @@
       @rightClick="onRightClick"
       style="width: 300px"
     />
-    <a-dropdown v-if="contextMenuVisible" :trigger="['contextmenu']" :visible="true">
-      <div :style="{ position: 'absolute', left: menuX + 'px', top: menuY + 'px' }" />
-      <template #overlay>
+    <a-dropdown
+      v-if="contextMenuVisible"
+      :trigger="['contextmenu']"
+      :visible="true"
+    >
+      <div
+        :style="{ position: 'absolute', left: menuX + 'px', top: menuY + 'px' }"
+      />
+      <template slot="overlay">
         <a-menu>
           <a-menu-item @click="showModal('add')">新增</a-menu-item>
           <a-menu-item @click="showModal('edit')">修改</a-menu-item>
@@ -18,13 +24,23 @@
         </a-menu>
       </template>
     </a-dropdown>
-    <a-modal title="新增/修改机构" :visible="modalVisible" @ok="handleOk" @cancel="handleCancel">
+    <a-modal
+      title="新增/修改机构"
+      :visible="modalVisible"
+      @ok="handleOk"
+      @cancel="handleCancel"
+    >
       <a-form :form="form" :model="formData">
         <a-form-item label="机构名称">
           <a-input
             v-decorator="[
               'orgName',
-              { rules: [{ required: true, message: '请输入机构名称' },{validator: validateName}] },
+              {
+                rules: [
+                  { required: true, message: '请输入机构名称' },
+                  { validator: validateName }
+                ]
+              }
             ]"
             v-model="formData.name"
             placeholder="请输入机构名称"
@@ -116,7 +132,10 @@ export default {
               key: Date.now().toString(),
               children: []
             }
-            const parentNode = this.findNode(this.treeData, this.selectedKeys[0])
+            const parentNode = this.findNode(
+              this.treeData,
+              this.selectedKeys[0]
+            )
             parentNode.children.push(newNode)
           }
           this.modalVisible = false
@@ -127,16 +146,22 @@ export default {
       this.modalVisible = false
     },
     handleDelete() {
-      const parentNode = this.findParentNode(this.treeData, this.selectedKeys[0])
+      const parentNode = this.findParentNode(
+        this.treeData,
+        this.selectedKeys[0]
+      )
       if (parentNode) {
-        parentNode.children = parentNode.children.filter(node => node.key !== this.selectedKeys[0])
+        parentNode.children = parentNode.children.filter(
+          node => node.key !== this.selectedKeys[0]
+        )
         this.selectedKeys = []
       }
       this.contextMenuVisible = false
     },
     validateName(rule, value) {
       if (!value) return Promise.reject('名称为必填项！')
-      if (/[$;%*!~&\/]/.test(value)) return Promise.reject('名称不能包含特殊字符！')
+      if (/[$;%*!~&\/]/.test(value))
+        return Promise.reject('名称不能包含特殊字符！')
       return Promise.resolve()
     },
     findNode(nodes, key) {
