@@ -1,0 +1,25 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "商品1",
+      "price": 100,
+      "image": "https://via.placeholder.com/80",
+      "invalid": false
+    },
+    {
+      "id": 2,
+      "name": "商品2",
+      "price": 200,
+      "image": "https://via.placeholder.com/80",
+      "invalid": true
+    },
+    {
+      "id": 3,
+      "name": "商品3",
+      "price": 300,
+      "image": "https://via.placeholder.com/80",
+      "invalid": false
+    }
+  ]
+}
