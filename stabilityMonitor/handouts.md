@@ -69,3 +69,9 @@ function xhrReplace() {
   })
 }
 ```
+
+fetch (参考源码)
+
+####
+
+
