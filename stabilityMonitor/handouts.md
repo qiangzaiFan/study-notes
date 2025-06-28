@@ -53,16 +53,6 @@ function xhrReplace() {
         }
         originOpen.apply(this,args)
     }
-<<<<<<< HEAD
-
-    // XMLHttpRequest.prototype 针对原有的请求添加数据
-    const originalXhrProto = XMLHttpRequest.prototype
-    // 1.open 获取请求时的基本信息
-    replaceOld(originalXhrProto,'open',(originOpen)=>{
-
-    })
-    // 2.send 额外添加埋点
-=======
   })
   // 2. send 额外添加埋点
   replaceOld(originalXhrProto,'send',(originSend)=>{
@@ -77,7 +67,6 @@ function xhrReplace() {
         })
     }
   })
->>>>>>> cf9cf90ce333fd5039ba165744af1c09e5fe6378
 }
 ```
 
