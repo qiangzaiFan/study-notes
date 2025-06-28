@@ -26,7 +26,7 @@
 ###错误信息收集
 1.接口异常
 xhr fetch 
-XMLHttpRequest.prototype 
+XMLHttpRequest.prototype  (对xhr进行监听)
 fetch apply 
 replaceOld 替换方法
 
@@ -39,5 +39,13 @@ function xhrRepalce(){
     if(XMLHttpRequest in window){
         return;
     }
+
+    // XMLHttpRequest.prototype 针对原有的请求添加数据
+    const originalXhrProto = XMLHttpRequest.prototype
+    // 1.open 获取请求时的基本信息
+    replaceOld(originalXhrProto,'open',(originOpen)=>{
+
+    })
+    // 2.send 额外添加埋点
 }
 ```
