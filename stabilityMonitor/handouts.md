@@ -75,6 +75,14 @@ fetch (参考源码)
 #### 代码&资源异常收集
 [Window: error event](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/error_event)
 
-window.addEventListener
+// 如何去监听代码&资源异常收集, window error event
+window.addEventListener('error')
+
+```js
+on(window,'error',function(e){
+
+})
+
+```
 
 
