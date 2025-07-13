@@ -43,7 +43,7 @@ function xhrReplace() {
   // 获取到基本的信息后，会在send完信息后，就认为请求发送，触发当前的埋点
   // 1. open 获取请求时的基本信息
   replaceOld(originalXhrProto, 'open', (originOpen) => {
-    return function(this,args){
+    return function(this,...args){
         // 在这里获取当前请求的基本信息 post, 'https://xxx'
         this.monitorXhr = {
             method:args[0],
@@ -72,7 +72,7 @@ function xhrReplace() {
 
 fetch (参考源码)
 
-#### 代码&资源异常收集
+### 代码&资源异常收集
 [Window: error event](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/error_event)
 
 // 如何去监听代码&资源异常收集, window error event
@@ -80,9 +80,174 @@ window.addEventListener('error')
 
 ```js
 on(window,'error',function(e){
-
+  // 发布订阅
+  // sendlog
 })
 
 ```
+
+promise 异常
+
+unhandledRejection
+
+window.addEventListener('unhandledRejection')
+
+```js
+on(window,'unhandledRejection',function(e){
+  // 发布订阅
+  // sendlog
+})
+
+```
+### 行为信息收集
+监听用户的点击事件或者其他事件，用户的一些页面跳转，监听用户能不能主动上报一些行为数据，监听console 这部分数据
+
+DOM事件 click
+
+document.addEventListener('click')
+
+```js
+on(window.document,'click',cb)
+```
+- history change 监听2个属性 pushState replaceState (MDN中查看history中这些方法)
+- hash change 监听 onpopstate
+
+路由访问信息
+
+history
+
+判断当前环境是否支撑history?
+supportHistory 
+window.history.pushState && window.history.replaceState
+
+不支持history,也就是说支持hash mode
+
+hash -> window.onpopstate
+
+```js
+  function  historyReplace(){
+    if(!supportHistory){
+      // 使用onpopstate
+      window.onpopstate = function(){
+        // sendLog sendLog的作用是发送错误信息
+        window.onpopState.apply(this,args)
+      }
+    }
+
+    replaceOld(window.history,pushState)
+    replaceOld(window.history,replaceState,(args)=>{
+      // 获取当前页面信息 window.location.href
+      const from = window.location.href
+      // 第3个就是跳转链接
+      const to = args[2]
+      // sendLog
+      {
+        from,to
+      }
+
+      cb.apply(this,args)
+    })
+  }
+```
+// 监听console类型
+window.console
+
+<!-- sendLog -->
+originalConsole.apply(this,args)
+
+### 目前主流前端框架如何收录问题
+
+React异常
+
+componentDidCatch
+```js
+function errorBoundaryReport(error){
+  // error 数据处理 Error
+  error.type = 'react_error';
+  sendLog
+}
+
+// react 组件
+componentDidCatch(error){
+  encodeMonitor.errorBoundaryReport(error)
+}
+
+// vue 组件
+vue.config.errorHandler
+
+```
+
+Vue异常
+
+以插件化的形式添加到Vue实例中
+
+```js
+const MonitorVue = {
+  install(Vue){
+    Vue.config.errorHandler = function(error,vm,info){
+      // 调用原生的错误信息
+      //originalVueErrorHandler.apply()
+    }
+  }
+}
+```
+
+### 面试中经常考察的内容
+
+#### 可预防
+
+1. 提供标准化研发流程
+  - cli eslint prettier tsconfig
+  - 文档沉淀
+  - 组件库 npm  code snippet
+  - jest 
+
+2. 演练
+
+  - 压测
+  - Code review 问题注入
+
+3. 灰度方案
+
+  - CDN分流: proxy
+  - 代码区分 grey UA ip
+
+
+#### 可监控
+
+无埋点：自动发布采集到的错误信息
+
+#### 数据采集
+1. JS异常 window.addEventListener('error')
+2. 接口异常 xhr fetch axios
+3. 资源异常
+4. 其他常见异常 unhandledRejection
+5. 框架异常
+  1. Vue: Vue.config.errorHandler
+  2.React: componentDidCatch
+
+行为跟踪：click hash change history change
+performance:
+
+#### 数据上报
+
+XHR image sendBeacon
+
+#### 数据清洗
+
+阈值处理
+
+#### 数据持久化
+
+数据库
+
+#### 数据可视化
+
+数据报表
+
+#### 可回滚
+
+##### 容器化部署
+
 
 
