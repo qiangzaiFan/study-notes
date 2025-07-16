@@ -249,5 +249,70 @@ XHR image sendBeacon
 
 ##### 容器化部署
 
+##### 数据迁移
+只增不删
+
+### 架构设计
+
+1. 对前端监控埋点的统一架构设计
+2. 聚合错误信息，进行统一的接口层封装
+ 
+### 性能指标收集
+
+performance 
+
+1. 页面加载 largest contentful paint  LCP
+2. 互动 first input delay FID
+3. CLS 视觉稳定性 cumulative layout shift
+这3个比较关键  
+
+#### 指标口径
+
+1. CLS
+看MDN这个方法的详细
+performanceObserver
+```js
+const getCLS = (cls)=>{
+  // !!window.performanceObserver
+  if(!supportPerformanceObserver){
+    console.warn()
+    return
+  }
+
+  // const po = new PerformanceObserver(l => 1.getEntries().map(cp)).observer({
+    // type:'layout-shift',
+  // })
+{
+  value,
+  !hadRecentInput cls
+}
+
+}
+```
+
+UA User agent  navigtor peroformance
+获取UA: navigator
+所有指标在 web.dev MDN 上全都有
+
+```js
+const getDeviceInfo = ()=>{
+  if(window.supportPerformance || !supportNavigator ){
+    //  !!window.peroformance
+    return
+  }
+
+  // 添加想统计的值
+  return {}
+}
+
+initDeviceInfo =()=>{
+  getDeviceInfo()
+  report()
+}
+```
+2. 
+
+
+
 
 
