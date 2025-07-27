@@ -310,7 +310,15 @@ initDeviceInfo =()=>{
   report()
 }
 ```
+
+FID
+
+LCP
+
 2. 
+
+### 架构设计
+
 
 
 
